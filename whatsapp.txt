@@ -1,0 +1,198 @@
+AI कोर्स लिस्ट (Free for MERN Dev):
+
+ChatGPT Prompt Engineering – https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/
+
+Buildspace AI Bootcamp – https://buildspace.so/learn/ai
+
+LangChain.js – https://js.langchain.com/docs/
+
+Hugging Face NLP Course – https://huggingface.co/learn/nlp-course
+
+(Optional) Anthropic AI Fluency – https://www.anthropic.com/news/ai-fluency-course
+
+
+
+
+
+
+Free English Courses to Improve Communication (with Links)
+
+1️⃣ Career English – Coursera
+🔗 https://www.coursera.org/learn/careerdevelopment
+
+🕒 ~12–15 hours | 🎓 Free with certificate
+
+2️⃣ Speak Fluently – Coursera
+🔗 https://www.coursera.org/learn/speak-english-professionally
+
+🕒 ~10–12 hours | 🎓 Free with certificate
+
+3️⃣ BBC Learning English – BBC English
+🔗 https://www.bbc.co.uk/learningenglish
+
+🕒 Ongoing (15–20 mins/day) | 🗣️ Listening, grammar, vocabulary
+
+4️⃣ Perfect English Grammar – Grammar Lessons
+🔗 https://www.perfect-english-grammar.com/free-grammar-lessons.html
+
+🕒 ~5–8 hours total | ✍️ Grammar with examples & practice
+
+5️⃣ Elllo.org – Real Listening Practice
+🔗 https://elllo.org/
+
+🕒 Ongoing (10–15 mins/day) | 🎧 Audio lessons + quizzes
+
+6️⃣ EnglishClass101 – YouTube Learning
+🔗 https://www.youtube.com/user/ENGLISHCLASS101
+
+🕒 Ongoing | 📺 Video-based learning (Beginner to Advanced)
+
+7️⃣ Communication for Beginners – Free Udemy Course
+🔗 https://www.udemy.com/course/communication-skills-for-beginners/
+
+🕒 ~1.5–2 hours | 🗨️ Basic communication skills
+
+8️⃣ Writing Skills – edX (UC Berkeley)
+🔗 https://www.edx.org/course/academic-and-business-writing
+
+🕒 ~8–10 hours | ✍️ Business, academic writing | 🎓 Free (audit mode)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+AI for Devs
+
+1️⃣ ChatGPT Prompt Engineering – DeepLearning.AI
+🔗 https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers/
+
+2️⃣ Buildspace AI Bootcamp
+🔗 https://buildspace.so/learn/ai
+
+3️⃣ LangChain.js Docs
+🔗 https://js.langchain.com/docs/
+
+4️⃣ Hugging Face NLP Course
+🔗 https://huggingface.co/learn/nlp-course
+
+5️⃣ Anthropic AI Fluency
+🔗 https://www.anthropic.com/news/ai-fluency-course
+
+🔹 English Communication
+
+1️⃣ Career English – Coursera
+🔗 https://www.coursera.org/learn/careerdevelopment
+
+2️⃣ Speak Fluently – Coursera
+🔗 https://www.coursera.org/learn/speak-english-professionally
+
+3️⃣ BBC Learning English
+🔗 https://www.bbc.co.uk/learningenglish
+
+4️⃣ Perfect English Grammar
+🔗 https://www.perfect-english-grammar.com/free-grammar-lessons.html
+
+5️⃣ Elllo.org Listening Practice
+🔗 https://elllo.org/
+
+6️⃣ EnglishClass101 – YouTube
+🔗 https://www.youtube.com/user/ENGLISHCLASS101
+
+7️⃣ Communication for Beginners – Udemy
+🔗 https://www.udemy.com/course/communication-skills-for-beginners/
+
+8️⃣ Writing Skills – edX (UC Berkeley)
+🔗 https://www.edx.org/course/academic-and-business-writing
+
+🔹 DevOps
+
+1️⃣ Introduction to DevOps – Microsoft Learn
+🔗 https://learn.microsoft.com/en-us/training/modules/devops-introduction/
+
+2️⃣ DevOps Foundations – LinkedIn Learning
+🔗 https://www.linkedin.com/learning/devops-foundations
+
+3️⃣ CI/CD with GitHub Actions – FreeCodeCamp
+🔗 https://www.youtube.com/watch?v=mFFXuXjVgkU
+
+4️⃣ Docker for Beginners – FreeCodeCamp
+🔗 https://www.youtube.com/watch?v=fqMOX6JJhGo
+
+5️⃣ Kubernetes for Beginners – FreeCodeCamp
+🔗 https://www.youtube.com/watch?v=d6WC5n9G_sM
+
+🔹 TypeScript + JavaScript
+
+1️⃣ TypeScript Handbook
+🔗 https://www.typescriptlang.org/docs/
+
+2️⃣ TypeScript for Beginners – FreeCodeCamp
+🔗 https://www.youtube.com/watch?v=30LWjhZzg50
+
+3️⃣ JavaScript Mastery – FreeCodeCamp
+🔗 https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/
+
+4️⃣ Eloquent JavaScript (Free Book)
+🔗 https://eloquentjavascript.net/
+
+5️⃣ JavaScript Info
+🔗 https://javascript.info/
+
+🔹 Git & Linux
+
+1️⃣ Git & GitHub – FreeCodeCamp
+🔗 https://www.youtube.com/watch?v=RGOj5yH7evk
+
+2️⃣ Pro Git Book
+🔗 https://git-scm.com/book/en/v2
+
+3️⃣ Linux for Developers – Coursera
+🔗 https://www.coursera.org/learn/linux-for-developers
+
+4️⃣ Linux Command Line Basics – FreeCodeCamp
+🔗 https://www.youtube.com/watch?v=ZtqBQ68cfJc
+
+🔹 Cloud + System Design
+
+1️⃣ AWS Cloud Practitioner Essentials
+🔗 https://explore.skillbuilder.aws/learn/course/134/aws-cloud-practitioner-essentials
+
+2️⃣ Google Cloud Essentials – Coursera
+🔗 https://www.coursera.org/learn/gcp-fundamentals
+
+3️⃣ System Design Primer – GitHub
+🔗 https://github.com/donnemartin/system-design-primer
+
+4️⃣ System Design for Beginners – FreeCodeCamp
+🔗 https://www.youtube.com/watch?v=MbjObHmDbZo
+
+🔹 DSA + Soft Skills
+
+1️⃣ JavaScript Algorithms – FreeCodeCamp
+🔗 https://www.freecodecamp.org/learn/javascript-algorithms-and-data-structures/
+
+2️⃣ LeetCode
+🔗 https://leetcode.com/
+
+3️⃣ NeetCode Roadmap
+🔗 https://neetcode.io/roadmap
+
+4️⃣ Time Management – Coursera
+🔗 https://www.coursera.org/learn/work-smarter-not-harder
+
+5️⃣ Critical Thinking – edX
+🔗 https://www.edx.org/course/critical-thinking
