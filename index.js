@@ -5,7 +5,8 @@ const packingRoutes = require("./routes/track");
 const auth = require('./routes/user')
 require("dotenv").config();
 const app = express();
-const port = 5000;
+
+
 connectDB();
 const auths = require("./middleware/auth");
 
@@ -21,6 +22,9 @@ app.get('/test', (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`🚀 Server running at http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//   console.log(`🚀 Server running at http://localhost:${port}`);
+// });
+
+app.listen(process.env.PORT || 3000)
+
