@@ -19,8 +19,8 @@ const userSchema = new mongoose.Schema({
   fullName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   profile: {
-    url: { type: String },         // URL of the image stored in Cloudinary
-    public_id: { type: String }   // Cloudinary public ID for managing/deleting images
+    url: { type: String },
+    public_id: { type: String } 
   },
   mobile: { type: String, required: true },
   password: { type: String, required: true },

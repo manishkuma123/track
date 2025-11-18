@@ -10,19 +10,22 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcryptjs": "^3.0.2",
+    "bcryptjs": "^2.4.3",
     "child_process": "^1.0.2",
     "cloudinary": "^1.41.3",
     "cors": "^2.8.5",
     "csv-parser": "^3.2.0",
-    "dotenv": "^17.2.2",
-    "express": "^5.1.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.537.0",
-    "mongoose": "^8.16.5",
-    "multer": "^2.0.2",
+    "mongoose": "^8.0.0",
+    "multer": "^1.4.5-lts.1",
     "multer-storage-cloudinary": "^4.0.0",
+    "node-cron": "^3.0.3",
     "nodemailer": "^7.0.9",
-    "papaparse": "^5.5.3"
+    "openai": "^6.7.0",
+    "papaparse": "^5.5.3",
+    "razorpay": "^2.9.2"
   }
 }

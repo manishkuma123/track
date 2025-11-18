@@ -7,6 +7,7 @@ const auths = require("../middleware/auth");
 const router = express.Router();
 const upload = multer({ dest: "uploads/" });
 const mongoose = require("mongoose");
+const Subscription = require('../models/Subscription');
 
 const validatePackingInput = (req, res, next) => {
   const { container, boxes } = req.body;
@@ -51,70 +52,6 @@ const validatePackingInput = (req, res, next) => {
   next();
 };
 
-
-// router.post('/calculate', auths(), validatePackingInput, (req, res) => {
-//   const python = spawn('python', ['packer.py']);
-
-//   let data = '';
-//   let errorData = '';
-
-//   python.stdout.on('data', chunk => {
-//     data += chunk.toString();
-//   });
-
-//   python.stderr.on('data', err => {
-//     errorData += err.toString();
-//   });
-
-//   python.on('close', async code => {
-//     if (code !== 0) {
-//       return res.status(500).json({ error: 'Python script failed', code, stderr: errorData });
-//     }
-
-//     try {
-//       const parsed = JSON.parse(data);
-//       const total_boxes = parsed.box_summary.reduce((sum, box) => sum + box.count, 0);
-//       const total_weight = parsed.total_weight || 0;
-
-//       const result = new PackingResult({
-//         container: req.body.container,
-//         boxes_input: req.body.boxes,
-//         total_boxes,
-//         total_weight,
-//         //  created_by: req.user._id,
-// created_by: req.body.userId,
-//         container_full: parsed.container_full,
-//         weight_limit_reached: parsed.weight_limit_reached || false,
-//         space_utilization: parsed.space_utilization,
-//         weight_utilization: parsed.weight_utilization || 0,
-//         box_summary: parsed.box_summary,
-//         created_at: new Date()
-//       });
-
-//       await result.save();
-//       const efficiencyReport = result.getEfficiencyReport();
-
-//       res.json({
-//         ...parsed,
-//         efficiency_report: efficiencyReport,
-//         result_id: result._id
-//       });
-//     } catch (err) {
-//       res.status(500).json({
-//         error: 'Invalid JSON from Python or MongoDB save error',
-//         details: err.message,
-//         raw_output: data
-//       });
-//     }
-//   });
-
-//   python.on('error', err => {
-//     res.status(500).json({ error: 'Failed to start Python process', details: err.message });
-//   });
-
-//   python.stdin.write(JSON.stringify(req.body));
-//   python.stdin.end();
-// });
 
 
 router.get('/resultall', async (req, res) => {
@@ -223,68 +160,6 @@ router.get('/stats', async (req, res) => {
 
 
 
-
-// Add these new routes to your existing router
-
-// Get unique box configurations from user's history
-// router.get('/box-history', async (req, res) => {
-//   try {
-//     const uniqueBoxes = await PackingResult.aggregate([
-//       // Unwind the boxes_input array to get individual boxes
-//       { $unwind: '$boxes_input' },
-      
-//       // Group by box properties to get unique configurations
-//       {
-//         $group: {
-//           _id: {
-//             name: '$boxes_input.name',
-//             length: '$boxes_input.length',
-//             width: '$boxes_input.width',
-//             height: '$boxes_input.height',
-//             weight: '$boxes_input.weight'
-//           },
-//           usage_count: { $sum: 1 },
-//           last_used: { $max: '$created_at' },
-//           // Keep track of different quantities used
-//           quantities_used: { $addToSet: '$boxes_input.quantity' }
-//         }
-//       },
-      
-//       // Sort by most recently used
-//       { $sort: { last_used: -1 } },
-      
-//       // Reshape the output
-//       {
-//         $project: {
-//           _id: 0,
-//           name: '$_id.name',
-//           length: '$_id.length',
-//           width: '$_id.width',
-//           height: '$_id.height',
-//           weight: '$_id.weight',
-//           usage_count: 1,
-//           last_used: 1,
-//           quantities_used: 1
-//         }
-//       }
-//     ]);
-
-//     res.json({
-//       boxes: uniqueBoxes,
-//       total_unique_boxes: uniqueBoxes.length
-//     });
-//   } catch (err) {
-//     res.status(500).json({ 
-//       error: 'Failed to fetch box history', 
-//       details: err.message 
-//     });
-//   }
-// });
-
-
-// Add these new routes to your existing router
-
-// Get unique box configurations from user's history
 
 router.get('/box-history', auths(), async (req, res) => {
   try {
@@ -405,7 +280,6 @@ router.get('/box-config/:resultId', async (req, res) => {
   }
 });
 
-// Search boxes by name or dimensions
 router.get('/search-boxes', async (req, res) => {
   try {
     const { name, min_length, max_length, min_width, max_width, min_height, max_height } = req.query;
@@ -519,7 +393,7 @@ router.get('/popular-boxes', async (req, res) => {
     });
   }
 });
-// Get box configurations from a specific result
+
 router.get('/box-config/:resultId', async (req, res) => {
   try {
     const result = await PackingResult.findById(req.params.resultId);
@@ -952,90 +826,337 @@ router.get('/container-history-by-name', auths(), async (req, res) => {
     });
   }
 });
+router.get('/containerdata',async(req,res)=>{
+  try{
+
+  }catch(err){
+    
+  }
+})
 
 
-router.post('/calculate', auths(), validatePackingInput, (req, res) => {
-  // Debug logging
-  console.log('req.user:', req.user);
-  console.log('req.body.userId:', req.body.userId);
+const getPlanLimits = (planType) => {
+  const limits = {
+    trial: {
+      max_boxes: 3,
+      csv_upload: false,
+      pdf_export: false,
+      weight_constraints: false,
+      advanced_optimization: false
+    },
+    starter: {
+      max_boxes: 10,
+      csv_upload: false,
+      pdf_export: false,
+      weight_constraints: true,
+      advanced_optimization: false
+    },
+    pro: {
+      max_boxes: 10,
+      csv_upload: true,
+      pdf_export: true,
+      weight_constraints: true,
+      advanced_optimization: false
+    },
+    exclusive: {
+      max_boxes: 100,
+      csv_upload: true,
+      pdf_export: true,
+      weight_constraints: true,
+      advanced_optimization: true
+    }
+  };
+  return limits[planType] || limits.trial;
+};
 
-  const python = spawn('python', ['packer.py']);
-
-  let data = '';
-  let errorData = '';
-
-  python.stdout.on('data', chunk => {
-    data += chunk.toString();
-  });
-
-  python.stderr.on('data', err => {
-    errorData += err.toString();
-  });
-
-  python.on('close', async code => {
-    if (code !== 0) {
-      return res.status(500).json({ error: 'Python script failed', code, stderr: errorData });
+router.post('/calculate', auths(), validatePackingInput, async (req, res) => {
+  try {
+    // 1️⃣ GET USER ID (matching your subscription route pattern)
+    const userId = req.user.id; // ✅ Changed to match your pattern
+    
+    console.log("🔍 User ID from token:", userId);
+    
+    if (!userId) {
+      return res.status(400).json({ 
+        error: 'User ID not found',
+        message: 'Authentication token is invalid'
+      });
     }
 
-    try {
-      const parsed = JSON.parse(data);
-      const total_boxes = parsed.box_summary.reduce((sum, box) => sum + box.count, 0);
-      const total_weight = parsed.total_weight || 0;
+    // 2️⃣ GET USER SUBSCRIPTION
+    const subscription = await Subscription.findOne({ user_id: userId });
+    const planType = subscription ? subscription.plan_type : 'trial';
+    
+    console.log("📊 Plan type:", planType);
+    console.log("📦 Subscription details:", subscription);
 
-      // ✅ FIXED: Use fallback for created_by
-      let createdBy = null;
-      if (req.user && req.user._id) {
-        createdBy = req.user._id;
-      } else if (req.body.userId) {
-        createdBy = req.body.userId;
-      } else {
-        return res.status(400).json({ 
-          error: 'User ID not found. Please ensure authentication is working properly.' 
+    // 3️⃣ CHECK IF SUBSCRIPTION EXISTS AND IS ACTIVE
+    let isActive = false;
+    
+    if (!subscription) {
+      // No subscription found - treat as trial with limits
+      console.log("⚠️ No subscription found - using trial limits");
+      isActive = false; // User needs to create trial or subscribe
+      
+      return res.status(403).json({
+        error: 'No subscription found',
+        message: 'Please start your 5-day free trial or subscribe to use this feature.',
+        upgrade_required: true,
+        current_plan: 'none',
+        suggested_action: 'create_trial',
+        trial_endpoint: '/api/subscription/create-trial'
+      });
+    }
+    
+    // Check if subscription is active
+    isActive = subscription.isActive() || subscription.isTrialActive();
+    
+    if (!isActive) {
+      const now = new Date();
+      const endDate = subscription.is_trial ? subscription.trial_end_date : subscription.end_date;
+      const daysRemaining = Math.ceil((endDate - now) / (1000 * 60 * 60 * 24));
+      
+      return res.status(403).json({
+        error: 'Subscription expired',
+        message: `Your ${planType} subscription has expired.`,
+        days_since_expiry: Math.abs(daysRemaining),
+        upgrade_required: true,
+        current_plan: planType,
+        suggested_action: 'renew_subscription'
+      });
+    }
+
+    const planLimits = getPlanLimits(planType);
+    
+    console.log("✅ Plan limits:", planLimits);
+
+    // 4️⃣ VALIDATE BOX COUNT LIMIT 🚨 CRITICAL
+    const boxCount = req.body.boxes?.length || 0;
+    
+    console.log(`📦 Box count: ${boxCount}/${planLimits.max_boxes}`);
+    
+    if (boxCount > planLimits.max_boxes) {
+      return res.status(403).json({
+        error: 'Box limit exceeded',
+        message: `Your ${planType} plan allows maximum ${planLimits.max_boxes} boxes. You tried to pack ${boxCount} boxes.`,
+        current_plan: planType,
+        max_allowed: planLimits.max_boxes,
+        boxes_submitted: boxCount,
+        boxes_exceeded: boxCount - planLimits.max_boxes,
+        upgrade_required: true,
+        suggested_plans: planType === 'trial' ? ['starter', 'pro', 'exclusive'] : 
+                        planType === 'starter' ? ['pro', 'exclusive'] : 
+                        ['exclusive']
+      });
+    }
+
+    // 5️⃣ CHECK CSV UPLOAD FEATURE 🚨 HIGH PRIORITY
+    const isCsvUpload = req.body.is_csv_upload || false;
+    
+    if (isCsvUpload && !planLimits.csv_upload) {
+      return res.status(403).json({
+        error: 'CSV upload not allowed',
+        message: `CSV upload is not available in your ${planType} plan. Upgrade to Pro or Exclusive to use this feature.`,
+        current_plan: planType,
+        feature_required: 'csv_upload',
+        upgrade_required: true,
+        suggested_plans: ['pro', 'exclusive']
+      });
+    }
+
+    // 6️⃣ CHECK WEIGHT CONSTRAINTS FEATURE 🚨 MEDIUM PRIORITY
+    const hasWeightConstraints = req.body.container?.weight_capacity != null;
+    
+    if (hasWeightConstraints && !planLimits.weight_constraints) {
+      return res.status(403).json({
+        error: 'Weight constraints not available',
+        message: `Weight constraints are not available in your ${planType} plan. Upgrade to Starter or higher.`,
+        current_plan: planType,
+        feature_required: 'weight_constraints',
+        upgrade_required: true,
+        suggested_plans: ['starter', 'pro', 'exclusive']
+      });
+    }
+
+    // 7️⃣ SELECT ALGORITHM BASED ON PLAN
+    const useAdvancedAlgorithm = planLimits.advanced_optimization;
+    
+    console.log(`✅ Plan Validation Passed:`, {
+      user_id: userId,
+      plan: planType,
+      is_active: isActive,
+      boxes_count: boxCount,
+      max_allowed: planLimits.max_boxes,
+      advanced_algo: useAdvancedAlgorithm,
+      csv_upload: isCsvUpload,
+      weight_constraints: hasWeightConstraints
+    });
+
+    // 8️⃣ PREPARE DATA FOR PYTHON SCRIPT
+    const pythonInput = {
+      ...req.body,
+      use_advanced_algorithm: useAdvancedAlgorithm,
+      plan_type: planType
+    };
+
+    // 9️⃣ CALL PYTHON PACKING ALGORITHM
+    const python = spawn('python', ['packer.py']);
+
+    let data = '';
+    let errorData = '';
+
+    python.stdout.on('data', chunk => {
+      data += chunk.toString();
+    });
+
+    python.stderr.on('data', err => {
+      errorData += err.toString();
+    });
+
+    python.on('close', async code => {
+      if (code !== 0) {
+        console.error('❌ Python script failed:', errorData);
+        return res.status(500).json({ 
+          error: 'Packing calculation failed', 
+          code, 
+          stderr: errorData 
         });
       }
 
-      const result = new PackingResult({
-        container: req.body.container,  
-        boxes_input: req.body.boxes,
-        total_boxes,
-        total_weight,
-        created_by: createdBy,
-        container_full: parsed.container_full,
-        weight_limit_reached: parsed.weight_limit_reached || false,
-        space_utilization: parsed.space_utilization,
-        weight_utilization: parsed.weight_utilization || 0,
-        box_summary: parsed.box_summary,
-        created_at: new Date()
-      });
+      try {
+        const parsed = JSON.parse(data);
+        const total_boxes = parsed.box_summary.reduce((sum, box) => sum + box.count, 0);
+        const total_weight = parsed.total_weight || 0;
 
-      await result.save();
-      const efficiencyReport = result.getEfficiencyReport();
+        // 🔟 SAVE RESULT TO DATABASE
+        const result = new PackingResult({
+          container: req.body.container,  
+          boxes_input: req.body.boxes,
+          total_boxes,
+          total_weight,
+          created_by: userId,
+          container_full: parsed.container_full,
+          weight_limit_reached: parsed.weight_limit_reached || false,
+          space_utilization: parsed.space_utilization,
+          weight_utilization: parsed.weight_utilization || 0,
+          box_summary: parsed.box_summary,
+          plan_used: planType,
+          algorithm_type: useAdvancedAlgorithm ? 'advanced' : 'basic',
+          created_at: new Date()
+        });
 
-      res.json({
-        ...parsed,
-        efficiency_report: efficiencyReport,
-        result_id: result._id,
-        debug_info: {
-          created_by: createdBy,
-          user_from_auth: req.user ? req.user._id : null,
-          user_from_body: req.body.userId || null
+        await result.save();
+        
+        console.log('✅ Result saved to database:', result._id);
+
+        // 1️⃣1️⃣ UPDATE USAGE STATS
+        if (subscription) {
+          subscription.usage_stats = subscription.usage_stats || {};
+          subscription.usage_stats.calculations_count = (subscription.usage_stats.calculations_count || 0) + 1;
+          subscription.usage_stats.last_calculation_date = new Date();
+          subscription.usage_stats.total_boxes_packed = (subscription.usage_stats.total_boxes_packed || 0) + total_boxes;
+          await subscription.save();
+          
+          console.log('✅ Usage stats updated');
         }
+
+        const efficiencyReport = result.getEfficiencyReport ? result.getEfficiencyReport() : null;
+
+        // ✅ SEND RESPONSE WITH PLAN INFO
+        res.json({
+          ...parsed,
+          efficiency_report: efficiencyReport,
+          result_id: result._id,
+          plan_info: {
+            current_plan: planType,
+            is_trial: subscription.is_trial,
+            days_remaining: Math.max(0, Math.ceil((subscription.is_trial ? subscription.trial_end_date : subscription.end_date - new Date()) / (1000 * 60 * 60 * 24))),
+            boxes_used: boxCount,
+            boxes_limit: planLimits.max_boxes,
+            algorithm_used: useAdvancedAlgorithm ? 'advanced' : 'basic',
+            features_available: planLimits,
+            calculations_count: subscription.usage_stats?.calculations_count || 1
+          }
+        });
+      } catch (err) {
+        console.error('❌ Failed to process result:', err);
+        res.status(500).json({
+          error: 'Failed to process packing result',
+          details: err.message,
+          raw_output: data
+        });
+      }
+    });
+
+    python.on('error', err => {
+      console.error('❌ Failed to start Python:', err);
+      res.status(500).json({ 
+        error: 'Failed to start packing algorithm', 
+        details: err.message 
       });
-    } catch (err) {
-      res.status(500).json({
-        error: 'Invalid JSON from Python or MongoDB save error',
-        details: err.message,
-        raw_output: data
+    });
+
+    python.stdin.write(JSON.stringify(pythonInput));
+    python.stdin.end();
+
+  } catch (err) {
+    console.error('❌ Calculate route error:', err);
+    res.status(500).json({
+      error: 'Server error',
+      details: err.message
+    });
+  }
+});
+
+router.post('/pdf-generate',auths(),async(req,res)=>{
+  
+})
+router.post('/export-pdf', auths(), async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    if (!userId) {
+      return res.status(400).json({ 
+        error: 'User ID not found' 
       });
     }
-  });
 
-  python.on('error', err => {
-    res.status(500).json({ error: 'Failed to start Python process', details: err.message });
-  });
+    const subscription = await Subscription.findOne({ user_id: userId });
+    
+    if (!subscription) {
+      return res.status(404).json({ 
+        error: 'No subscription found',
+        message: 'Please subscribe to use PDF export feature'
+      });
+    }
+    
+    const planType = subscription.plan_type;
+    const planLimits = getPlanLimits(planType);
 
-  python.stdin.write(JSON.stringify(req.body));
-  python.stdin.end();
+    // CHECK PDF EXPORT PERMISSION
+    if (!planLimits.pdf_export) {
+      return res.status(403).json({
+        error: 'PDF export not available',
+        message: `PDF export requires Pro or Exclusive plan. Your current plan: ${planType}`,
+        current_plan: planType,
+        upgrade_required: true,
+        suggested_plans: ['pro', 'exclusive']
+      });
+    }
+
+    // ✅ PDF export is allowed
+    res.json({
+      message: 'PDF export feature available',
+      plan: planType,
+      note: 'Implement PDF generation logic here'
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      error: 'PDF export failed',
+      details: err.message
+    });
+  }
 });
 
 router.post('/calculate-no-auth', validatePackingInput, (req, res) => {
@@ -1466,3 +1587,4 @@ router.get('/debug-user-containers/:userId', async (req, res) => {
   }
 });
 module.exports = router;
+
